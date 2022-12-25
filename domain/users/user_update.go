@@ -9,6 +9,9 @@ import (
 )
 
 func (p *UpdateUserParam) validate(id IdUser, r IRepository) error {
+	if p.Name == nil && p.Email == nil && p.Password == nil {
+		return &errors.ErrNoUpdate{}
+	}
 	if p.Name != nil && *p.Name == "" {
 		return &errors.ErrValidation{
 			Property:    "Name",

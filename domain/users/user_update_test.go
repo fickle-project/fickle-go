@@ -54,6 +54,21 @@ func TestUser_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "failed to validation: no update",
+			initialData: []users.CreateUserParam{{
+				Name:     "fickle",
+				Email:    "test@fickle.com",
+				Password: "ficklePassword",
+			}},
+			toUpdateUserEmail: "test@fickle.com",
+			args: args{
+				r: inmemory.NewRepositoryUsers(),
+				p: users.UpdateUserParam{},
+			},
+			want:    users.User{},
+			wantErr: true,
+		},
+		{
 			name: "failed to validation: 'Name' empty",
 			initialData: []users.CreateUserParam{{
 				Name:     "fickle",

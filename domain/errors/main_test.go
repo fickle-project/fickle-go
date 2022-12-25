@@ -103,6 +103,40 @@ func TestErrValidation_Error(t *testing.T) {
 	}
 }
 
+func TestErrNoUpdate_As(t *testing.T) {
+	type args struct {
+		t interface{}
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "true",
+			args: args{
+				t: &ErrNoUpdate{},
+			},
+			want: true,
+		},
+		{
+			name: "false",
+			args: args{
+				t: errors.New(""),
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &ErrNoUpdate{}
+			if got := e.As(tt.args.t); got != tt.want {
+				t.Errorf("ErrNoUpdate.As() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestErrNotFound_As(t *testing.T) {
 	type fields struct {
 		Object string

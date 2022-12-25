@@ -29,6 +29,23 @@ func (e *ErrValidation) As(t interface{}) bool {
 	return false
 }
 
+type ErrNoUpdate struct{}
+
+func (e *ErrNoUpdate) Error() string {
+	return "no update."
+}
+
+func (e *ErrNoUpdate) errorType() string {
+	return "no update"
+}
+
+func (e *ErrNoUpdate) As(t interface{}) bool {
+	if x, ok := t.(interface{ errorType() string }); ok && x.errorType() == e.errorType() {
+		return true
+	}
+	return false
+}
+
 type ErrNotFound struct {
 	Object string
 	Id     string
