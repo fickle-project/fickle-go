@@ -4,7 +4,7 @@ import "fmt"
 
 type ErrValidation struct {
 	Property    string
-	Given       interface{}
+	Given       *string
 	Description string
 }
 
@@ -12,7 +12,10 @@ func (e *ErrValidation) Error() string {
 	// e.g.
 	// the property "Name" given "" cannot be empty.
 	// the property "Email" given "given-email" is invalid email address.
-	return fmt.Sprintf("the property \"%s\" given \"%s\" %s.", e.Property, e.Given, e.Description)
+	if e.Given == nil {
+		return fmt.Sprintf("the property \"%s\" given 'nil' %s.", e.Property, e.Description)
+	}
+	return fmt.Sprintf("the property \"%s\" given \"%s\" %s.", e.Property, *e.Given, e.Description)
 }
 
 func (e *ErrValidation) errorType() string {
@@ -20,7 +23,7 @@ func (e *ErrValidation) errorType() string {
 }
 
 func (e *ErrValidation) As(t interface{}) bool {
-	if x, ok := t.(interface{ errorType(any) string }); ok && x.errorType(e) == e.errorType() {
+	if x, ok := t.(interface{ errorType() string }); ok && x.errorType() == e.errorType() {
 		return true
 	}
 	return false
@@ -40,7 +43,7 @@ func (e *ErrNotFound) errorType() string {
 }
 
 func (e *ErrNotFound) As(t interface{}) bool {
-	if x, ok := t.(interface{ errorType(any) string }); ok && x.errorType(e) == e.errorType() {
+	if x, ok := t.(interface{ errorType() string }); ok && x.errorType() == e.errorType() {
 		return true
 	}
 	return false

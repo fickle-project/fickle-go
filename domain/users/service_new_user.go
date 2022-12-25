@@ -12,21 +12,21 @@ func (p *CreateUserParam) validate(r IRepository) error {
 	if p.Name == "" {
 		return &errors.ErrValidation{
 			Property:    "Name",
-			Given:       "",
+			Given:       new(string),
 			Description: "cannot be empty",
 		}
 	}
 	if p.Email == "" {
 		return &errors.ErrValidation{
 			Property:    "Email",
-			Given:       "",
+			Given:       new(string),
 			Description: "cannot be empty",
 		}
 	}
 	if _, err := mail.ParseAddress(p.Email); err != nil {
 		return &errors.ErrValidation{
 			Property:    "Email",
-			Given:       p.Email,
+			Given:       &p.Email,
 			Description: "is invalid email address",
 		}
 	}
@@ -35,14 +35,14 @@ func (p *CreateUserParam) validate(r IRepository) error {
 	} else if len(u) != 0 {
 		return &errors.ErrValidation{
 			Property:    "Email",
-			Given:       p.Email,
+			Given:       &p.Email,
 			Description: "was already used",
 		}
 	}
 	if utf8.RuneCountInString(p.Password) < 8 {
 		return &errors.ErrValidation{
 			Property:    "Email",
-			Given:       p.Password,
+			Given:       &p.Password,
 			Description: "must be at least 8 characters",
 		}
 	}
