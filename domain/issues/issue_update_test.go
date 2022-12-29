@@ -204,6 +204,24 @@ func TestIssue_Update(t *testing.T) {
 			want:    issues.Issue{},
 			wantErr: true,
 		},
+		{
+			name: "failed to validate: no update",
+			fields: fields{
+				Id:          "2",
+				Name:        "issue 2",
+				BoardId:     "1",
+				ColumnId:    func() *issues.IdColumn { var id issues.IdColumn = "1"; return &id }(),
+				Order:       "1",
+				WorkspaceId: "1",
+				UserId:      "1",
+			},
+			args: args{
+				r: r,
+				p: issues.UpdateIssueParam{},
+			},
+			want:    issues.Issue{},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
