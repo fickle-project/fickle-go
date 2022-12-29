@@ -140,6 +140,21 @@ func TestUser_Update(t *testing.T) {
 			want:    users.User{},
 			wantErr: true,
 		},
+		{
+			name: "failed to validate: no update",
+			initialData: []users.CreateUserParam{{
+				Name:     "fickle",
+				Email:    "test@fickle.com",
+				Password: "ficklePassword",
+			}},
+			toUpdateUserEmail: "test@fickle.com",
+			args: args{
+				r: inmemory.NewRepositoryUsers(),
+				p: users.UpdateUserParam{},
+			},
+			want:    users.User{},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
