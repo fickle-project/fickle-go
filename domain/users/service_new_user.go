@@ -41,7 +41,7 @@ func (p *CreateUserParam) validate(r IRepository) error {
 	}
 	if utf8.RuneCountInString(p.Password) < 8 {
 		return &errors.ErrValidation{
-			Property:    "Email",
+			Property:    "Password",
 			Given:       &p.Password,
 			Description: "must be at least 8 characters",
 		}
