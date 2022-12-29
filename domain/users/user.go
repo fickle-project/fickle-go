@@ -3,6 +3,7 @@ package users
 type iUser interface {
 	Update(IRepository, UpdateUserParam) (User, error)
 	Remove(IRepository) error
+	Verify(password []byte) (bool, error)
 }
 
 type (

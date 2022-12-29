@@ -3,6 +3,7 @@ package users_test
 import (
 	"fickle/domain/users"
 	"fickle/infrastructure/datasource/inmemory"
+	"reflect"
 	"testing"
 )
 
@@ -19,7 +20,7 @@ func Test_userService_NewUser(t *testing.T) {
 		want        users.User
 		wantErr     bool
 	}{{
-		name:        "success",
+		name:        "ok",
 		initialData: []users.CreateUserParam{},
 		args: args{
 			f: inmemory.NewFactoryUsers(),
@@ -75,7 +76,7 @@ func Test_userService_NewUser(t *testing.T) {
 		want:    users.User{},
 		wantErr: true,
 	}, {
-		name: "failed to validation: 'Email' already used",
+		name: "failed to validate: 'Email' already used",
 		initialData: []users.CreateUserParam{{
 			Name:     "elkcif",
 			Email:    "test@fickle.com",
@@ -122,7 +123,9 @@ func Test_userService_NewUser(t *testing.T) {
 				t.Errorf("userService.NewUser() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got.Name != tt.want.Name || got.Email != tt.want.Email {
+			tt.want.Id = got.Id
+			tt.want.PasswordHash = got.PasswordHash
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("userService.NewUser() = %v, want %v", got, tt.want)
 			}
 		})

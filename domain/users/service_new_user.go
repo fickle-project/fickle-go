@@ -4,22 +4,20 @@ import (
 	"fickle/domain/errors"
 	"net/mail"
 	"unicode/utf8"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 func (p *CreateUserParam) validate(r IRepository) error {
 	if p.Name == "" {
 		return &errors.ErrValidation{
 			Property:    "Name",
-			Given:       new(string),
+			Given:       &p.Name,
 			Description: "cannot be empty",
 		}
 	}
 	if p.Email == "" {
 		return &errors.ErrValidation{
 			Property:    "Email",
-			Given:       new(string),
+			Given:       &p.Email,
 			Description: "cannot be empty",
 		}
 	}
@@ -41,7 +39,7 @@ func (p *CreateUserParam) validate(r IRepository) error {
 	}
 	if utf8.RuneCountInString(p.Password) < 8 {
 		return &errors.ErrValidation{
-			Property:    "Email",
+			Property:    "Password",
 			Given:       &p.Password,
 			Description: "must be at least 8 characters",
 		}
@@ -62,7 +60,7 @@ func (u *userService) NewUser(f IFactory, r IRepository, p CreateUserParam) (Use
 		return User{}, err
 	}
 
-	hashed, err := bcrypt.GenerateFromPassword([]byte(p.Password), bcrypt.DefaultCost)
+	hashed, err := generatePasswordHash(p.Password)
 	if err != nil {
 		return User{}, err
 	}
