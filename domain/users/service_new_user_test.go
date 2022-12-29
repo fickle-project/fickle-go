@@ -75,7 +75,7 @@ func Test_userService_NewUser(t *testing.T) {
 		want:    users.User{},
 		wantErr: true,
 	}, {
-		name: "failed to validation: 'Email' already used",
+		name: "failed to validate: 'Email' already used",
 		initialData: []users.CreateUserParam{{
 			Name:     "elkcif",
 			Email:    "test@fickle.com",

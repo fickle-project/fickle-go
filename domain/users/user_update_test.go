@@ -20,7 +20,7 @@ func TestUser_Update(t *testing.T) {
 		wantErr           bool
 	}{
 		{
-			name: "success",
+			name: "ok",
 			initialData: []users.CreateUserParam{{
 				Name:     "fickle",
 				Email:    "test@fickle.com",
@@ -54,7 +54,7 @@ func TestUser_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed to validation: no update",
+			name: "failed to validate: no update",
 			initialData: []users.CreateUserParam{{
 				Name:     "fickle",
 				Email:    "test@fickle.com",
@@ -69,7 +69,7 @@ func TestUser_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed to validation: 'Name' empty",
+			name: "failed to validate: 'Name' empty",
 			initialData: []users.CreateUserParam{{
 				Name:     "fickle",
 				Email:    "test@fickle.com",
@@ -86,7 +86,7 @@ func TestUser_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed to validation: 'Email' empty",
+			name: "failed to validate: 'Email' empty",
 			initialData: []users.CreateUserParam{{
 				Name:     "fickle",
 				Email:    "test@fickle.com",
@@ -103,7 +103,7 @@ func TestUser_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed to validation: 'Email' already used",
+			name: "failed to validate: 'Email' already used",
 			initialData: []users.CreateUserParam{{
 				Name:     "fickle",
 				Email:    "test@fickle.com",
@@ -124,7 +124,7 @@ func TestUser_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed to validation: 'Email' invalid",
+			name: "failed to validate: 'Email' invalid",
 			initialData: []users.CreateUserParam{{
 				Name:     "fickle",
 				Email:    "test@fickle.com",

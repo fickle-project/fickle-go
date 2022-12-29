@@ -22,7 +22,7 @@ func Test_rUsers_AddUser(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name: "success 1",
+			name: "ok ",
 			fields: fields{
 				data: []users.User{},
 			},
@@ -51,7 +51,7 @@ func Test_rUsers_AddUser(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "success 2",
+			name: "ok ",
 			fields: fields{
 				data: []users.User{{
 					Id:           "1",
@@ -132,7 +132,7 @@ func Test_rUsers_FindUser(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "success",
+			name: "ok",
 			fields: fields{
 				data: []users.User{{
 					Id:           "1",
@@ -394,7 +394,7 @@ func Test_rUsers_RemoveUser(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name: "success",
+			name: "ok",
 			fields: fields{
 				data: []users.User{{
 					Id:           "1",
@@ -473,7 +473,7 @@ func Test_rUsers_UpdateUser(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name: "success",
+			name: "ok",
 			fields: fields{
 				data: []users.User{{
 					Id:           "1",
