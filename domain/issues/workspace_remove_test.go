@@ -27,6 +27,24 @@ func TestWorkspace_Remove(t *testing.T) {
 		Archived: false,
 		UserId:   "1",
 	})
+	r.CreateWorkspace(issues.Workspace{
+		Id:   "2",
+		Name: "archive",
+		Columns: []issues.Column{
+			{
+				Id:          "2",
+				Name:        "Backlog",
+				Color:       "#2c3e50",
+				Hidden:      false,
+				Order:       "1",
+				Default:     true,
+				WorkspaceId: "2",
+				UserId:      "1",
+			},
+		},
+		Archived: false,
+		UserId:   "1",
+	})
 
 	type fields struct {
 		Id       issues.IdWorkspace
@@ -70,7 +88,32 @@ func TestWorkspace_Remove(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "failed: not found",
+			name: "ok",
+			fields: fields{
+				Id:   "2",
+				Name: "archive",
+				Columns: []issues.Column{
+					{
+						Id:          "2",
+						Name:        "Backlog",
+						Color:       "#2c3e50",
+						Hidden:      false,
+						Order:       "1",
+						Default:     true,
+						WorkspaceId: "2",
+						UserId:      "1",
+					},
+				},
+				Archived: false,
+				UserId:   "1",
+			},
+			args: args{
+				r: r,
+			},
+			wantErr: false,
+		},
+		{
+			name: "fail: not found",
 			fields: fields{
 				Id:   "1",
 				Name: "general",

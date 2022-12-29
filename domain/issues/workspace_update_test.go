@@ -28,6 +28,24 @@ func TestWorkspace_Update(t *testing.T) {
 		Archived: false,
 		UserId:   "1",
 	})
+	r.CreateWorkspace(issues.Workspace{
+		Id:   "2",
+		Name: "archive",
+		Columns: []issues.Column{
+			{
+				Id:          "2",
+				Name:        "Backlog",
+				Color:       "#2c3e50",
+				Hidden:      false,
+				Order:       "1",
+				Default:     true,
+				WorkspaceId: "2",
+				UserId:      "1",
+			},
+		},
+		Archived: false,
+		UserId:   "1",
+	})
 
 	type fields struct {
 		Id       issues.IdWorkspace
@@ -151,9 +169,54 @@ func TestWorkspace_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "fail: not found",
+			name: "ok",
 			fields: fields{
 				Id:   "2",
+				Name: "archive",
+				Columns: []issues.Column{
+					{
+						Id:          "2",
+						Name:        "Backlog",
+						Color:       "#2c3e50",
+						Hidden:      false,
+						Order:       "1",
+						Default:     true,
+						WorkspaceId: "2",
+						UserId:      "1",
+					},
+				},
+				Archived: false,
+				UserId:   "1",
+			},
+			args: args{
+				r: r,
+				p: issues.UpdateWorkspaceParam{
+					Name: func() *string { s := "updated"; return &s }(),
+				},
+			},
+			want: issues.Workspace{
+				Name: "updated",
+				Columns: []issues.Column{
+					{
+						Id:          "2",
+						Name:        "Backlog",
+						Color:       "#2c3e50",
+						Hidden:      false,
+						Order:       "1",
+						Default:     true,
+						WorkspaceId: "2",
+						UserId:      "1",
+					},
+				},
+				Archived: false,
+				UserId:   "1",
+			},
+			wantErr: false,
+		},
+		{
+			name: "fail: not found",
+			fields: fields{
+				Id:   "0",
 				Name: "general",
 				Columns: []issues.Column{
 					{

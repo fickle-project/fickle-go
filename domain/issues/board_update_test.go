@@ -17,6 +17,13 @@ func TestBoard_Update(t *testing.T) {
 		Archived:    false,
 		UserId:      "1",
 	})
+	r.CreateBoard(issues.Board{
+		Id:          "2",
+		Name:        "elkcif",
+		WorkspaceId: "2",
+		Archived:    false,
+		UserId:      "2",
+	})
 
 	type fields struct {
 		Id          issues.IdBoard
@@ -79,9 +86,25 @@ func TestBoard_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed: not found",
+			name: "failed to validate: no update",
 			fields: fields{
 				Id:          "2",
+				Name:        "fickle",
+				WorkspaceId: "1",
+				Archived:    false,
+				UserId:      "1",
+			},
+			args: args{
+				r: r,
+				p: issues.UpdateBoardParam{},
+			},
+			want:    issues.Board{},
+			wantErr: true,
+		},
+		{
+			name: "fail: not found",
+			fields: fields{
+				Id:          "0",
 				Name:        "fickle",
 				WorkspaceId: "1",
 				Archived:    false,
@@ -97,20 +120,28 @@ func TestBoard_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed: no update",
+			name: "ok",
 			fields: fields{
 				Id:          "2",
-				Name:        "fickle",
-				WorkspaceId: "1",
+				Name:        "elkcif",
+				WorkspaceId: "2",
 				Archived:    false,
-				UserId:      "1",
+				UserId:      "2",
 			},
 			args: args{
 				r: r,
-				p: issues.UpdateBoardParam{},
+				p: issues.UpdateBoardParam{
+					Name: func() *string { s := "fickle"; return &s }(),
+				},
 			},
-			want:    issues.Board{},
-			wantErr: true,
+			want: issues.Board{
+				Id:          "2",
+				Name:        "fickle",
+				WorkspaceId: "2",
+				Archived:    false,
+				UserId:      "2",
+			},
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {

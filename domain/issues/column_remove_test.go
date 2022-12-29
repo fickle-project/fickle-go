@@ -92,7 +92,7 @@ func TestColumn_Remove(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "failed: not found",
+			name: "fail: not found",
 			fields: fields{
 				Id:          "3",
 				Name:        "Next up",
