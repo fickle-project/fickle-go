@@ -4,8 +4,6 @@ import (
 	"fickle/domain/errors"
 	"net/mail"
 	"unicode/utf8"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 func (p *UpdateUserParam) validate(id IdUser, r IRepository) error {
@@ -65,7 +63,7 @@ func (u *User) Update(r IRepository, p UpdateUserParam) (User, error) {
 	}
 
 	if p.Password != nil {
-		hashed, err := bcrypt.GenerateFromPassword([]byte(*p.Password), bcrypt.DefaultCost)
+		hashed, err := generatePasswordHash(*p.Password)
 		if err != nil {
 			return User{}, err
 		}
