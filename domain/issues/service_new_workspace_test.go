@@ -253,7 +253,7 @@ func Test_boardService_NewWorkspace(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "failed to validation: 'Default' duplicated",
+			name: "failed to validate: 'Default' duplicated",
 			args: args{
 				f: inmemory.NewFactoryIssues(),
 				r: inmemory.NewRepositoryIssues(),
@@ -316,7 +316,7 @@ func Test_boardService_NewWorkspace(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed to validation: 'Name' empty",
+			name: "failed to validate: 'Name' empty",
 			args: args{
 				f: inmemory.NewFactoryIssues(),
 				r: inmemory.NewRepositoryIssues(),
@@ -379,7 +379,7 @@ func Test_boardService_NewWorkspace(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed to validation: 'Column[].Name' empty",
+			name: "failed to validate: 'Column[].Name' empty",
 			args: args{
 				f: inmemory.NewFactoryIssues(),
 				r: inmemory.NewRepositoryIssues(),

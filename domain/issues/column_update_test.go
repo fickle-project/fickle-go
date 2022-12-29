@@ -124,7 +124,26 @@ func TestColumn_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed: not found",
+			name: "failed to validate: no update",
+			fields: fields{
+				Id:          "1",
+				Name:        "Backlog",
+				Color:       "#2c3e50",
+				Hidden:      false,
+				Order:       "1",
+				Default:     true,
+				WorkspaceId: "1",
+				UserId:      "1",
+			},
+			args: args{
+				r: r,
+				p: issues.UpdateBoardColumnParam{},
+			},
+			want:    issues.Column{},
+			wantErr: true,
+		},
+		{
+			name: "fail: not found",
 			fields: fields{
 				Id:          "2",
 				Name:        "Next up",
@@ -141,25 +160,6 @@ func TestColumn_Update(t *testing.T) {
 					Name:  func() *string { s := "updated"; return &s }(),
 					Color: func() *string { s := "#fff"; return &s }(),
 				},
-			},
-			want:    issues.Column{},
-			wantErr: true,
-		},
-		{
-			name: "failed: no update",
-			fields: fields{
-				Id:          "1",
-				Name:        "Backlog",
-				Color:       "#2c3e50",
-				Hidden:      false,
-				Order:       "1",
-				Default:     true,
-				WorkspaceId: "1",
-				UserId:      "1",
-			},
-			args: args{
-				r: r,
-				p: issues.UpdateBoardColumnParam{},
 			},
 			want:    issues.Column{},
 			wantErr: true,

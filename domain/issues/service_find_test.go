@@ -261,7 +261,7 @@ func Test_boardService_FindBoard(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "failed: not found",
+			name: "fail: not found",
 			args: args{
 				r:  r,
 				id: "0",
@@ -606,7 +606,7 @@ func Test_boardService_FindIssue(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "failed: not found",
+			name: "fail: not found",
 			args: args{
 				r:  r,
 				id: "0",
@@ -987,7 +987,7 @@ func Test_boardService_FindWorkspace(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "failed: not found",
+			name: "fail: not found",
 			args: args{
 				r:  r,
 				id: "0",

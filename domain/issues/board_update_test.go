@@ -79,7 +79,23 @@ func TestBoard_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed: not found",
+			name: "failed to validate: no update",
+			fields: fields{
+				Id:          "2",
+				Name:        "fickle",
+				WorkspaceId: "1",
+				Archived:    false,
+				UserId:      "1",
+			},
+			args: args{
+				r: r,
+				p: issues.UpdateBoardParam{},
+			},
+			want:    issues.Board{},
+			wantErr: true,
+		},
+		{
+			name: "fail: not found",
 			fields: fields{
 				Id:          "2",
 				Name:        "fickle",
@@ -92,22 +108,6 @@ func TestBoard_Update(t *testing.T) {
 				p: issues.UpdateBoardParam{
 					Name: func() *string { s := "updated"; return &s }(),
 				},
-			},
-			want:    issues.Board{},
-			wantErr: true,
-		},
-		{
-			name: "failed: no update",
-			fields: fields{
-				Id:          "2",
-				Name:        "fickle",
-				WorkspaceId: "1",
-				Archived:    false,
-				UserId:      "1",
-			},
-			args: args{
-				r: r,
-				p: issues.UpdateBoardParam{},
 			},
 			want:    issues.Board{},
 			wantErr: true,

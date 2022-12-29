@@ -47,7 +47,7 @@ func TestBoard_Remove(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "failed: not found",
+			name: "fail: not found",
 			fields: fields{
 				Id:          "1",
 				Name:        "fickle",
