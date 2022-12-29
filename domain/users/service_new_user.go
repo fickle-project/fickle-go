@@ -12,14 +12,14 @@ func (p *CreateUserParam) validate(r IRepository) error {
 	if p.Name == "" {
 		return &errors.ErrValidation{
 			Property:    "Name",
-			Given:       new(string),
+			Given:       &p.Name,
 			Description: "cannot be empty",
 		}
 	}
 	if p.Email == "" {
 		return &errors.ErrValidation{
 			Property:    "Email",
-			Given:       new(string),
+			Given:       &p.Email,
 			Description: "cannot be empty",
 		}
 	}

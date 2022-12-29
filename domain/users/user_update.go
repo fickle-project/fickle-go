@@ -15,7 +15,7 @@ func (p *UpdateUserParam) validate(id IdUser, r IRepository) error {
 	if p.Name != nil && *p.Name == "" {
 		return &errors.ErrValidation{
 			Property:    "Name",
-			Given:       new(string),
+			Given:       p.Name,
 			Description: "cannot be empty",
 		}
 	}
@@ -23,7 +23,7 @@ func (p *UpdateUserParam) validate(id IdUser, r IRepository) error {
 		if *p.Email == "" {
 			return &errors.ErrValidation{
 				Property:    "Email",
-				Given:       new(string),
+				Given:       p.Email,
 				Description: "cannot be empty",
 			}
 		}
