@@ -124,7 +124,34 @@ func TestWorkspace_Update(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "failed: not found",
+			name: "failed to validate: no update",
+			fields: fields{
+				Id:   "1",
+				Name: "general",
+				Columns: []issues.Column{
+					{
+						Id:          "1",
+						Name:        "Backlog",
+						Color:       "#2c3e50",
+						Hidden:      false,
+						Order:       "1",
+						Default:     true,
+						WorkspaceId: "1",
+						UserId:      "1",
+					},
+				},
+				Archived: false,
+				UserId:   "1",
+			},
+			args: args{
+				r: r,
+				p: issues.UpdateWorkspaceParam{},
+			},
+			want:    issues.Workspace{},
+			wantErr: true,
+		},
+		{
+			name: "fail: not found",
 			fields: fields{
 				Id:   "2",
 				Name: "general",
