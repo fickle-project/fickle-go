@@ -26,7 +26,7 @@ func (r *qSchedules) FindLog(id schedules.IdLog, q schedules.QueryLogParam) (sch
 
 	le := schedules.LogWithEmbedDatas{Log: ll[0]}
 
-	if q.Embed.Issue {
+	if q.Embed.Issue && le.Log.IssueId != nil {
 		issue, err := r.issuesRepo.FindIssue(*le.Log.IssueId, issues.QueryIssueParam{})
 		if err != nil {
 			return schedules.LogWithEmbedDatas{}, err
@@ -63,7 +63,7 @@ func (r *qSchedules) FindLogs(q schedules.QueryLogParam) ([]schedules.LogWithEmb
 
 	for _, l := range ll {
 		le := schedules.LogWithEmbedDatas{Log: l}
-		if q.Embed.Issue {
+		if q.Embed.Issue && le.Log.IssueId != nil {
 			// TODO: fix N+1
 			issue, err := r.issuesRepo.FindIssue(*le.Log.IssueId, issues.QueryIssueParam{})
 			if err != nil {
@@ -87,7 +87,7 @@ func (r *qSchedules) FindSchedule(id schedules.IdSchedule, q schedules.QuerySche
 
 	se := schedules.ScheduleWithEmbedDatas{Schedule: ss[0]}
 
-	if q.Embed.Issue {
+	if q.Embed.Issue && se.Schedule.IssueId != nil {
 		issue, err := r.issuesRepo.FindIssue(*se.Schedule.IssueId, issues.QueryIssueParam{})
 		if err != nil {
 			return schedules.ScheduleWithEmbedDatas{}, err
@@ -124,7 +124,7 @@ func (r *qSchedules) FindSchedules(q schedules.QueryScheduleParam) ([]schedules.
 
 	for _, s := range ss {
 		se := schedules.ScheduleWithEmbedDatas{Schedule: s}
-		if q.Embed.Issue {
+		if q.Embed.Issue && se.Schedule.IssueId != nil {
 			// TODO: fix N+1
 			issue, err := r.issuesRepo.FindIssue(*se.Schedule.IssueId, issues.QueryIssueParam{})
 			if err != nil {
