@@ -27,12 +27,18 @@ type (
 	}
 
 	QueryIssueParam struct {
-		Embed       []string
+		Embed       QueryIssueParamEmbed
 		BoardId     *IdBoard
 		ColumnId    **IdColumn
 		WorkspaceId *IdWorkspace
 		Name        *string
 		NameContain *string
+	}
+
+	QueryIssueParamEmbed struct {
+		Column    bool
+		Board     bool
+		Workspace bool
 	}
 
 	IssueWithEmbedDatas struct {

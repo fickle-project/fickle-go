@@ -137,7 +137,7 @@ func Test_boardService_FindBoard(t *testing.T) {
 				r:  r,
 				id: "1",
 				p: issues.QueryBoardParam{
-					Embed: []string{"workspace"},
+					Embed: issues.QueryBoardParamEmbed{Workspace: true},
 				},
 			},
 			want: issues.BoardWithEmbedDatas{
@@ -178,7 +178,7 @@ func Test_boardService_FindBoard(t *testing.T) {
 				r:  r,
 				id: "1",
 				p: issues.QueryBoardParam{
-					Embed: []string{"issues", "workspace"},
+					Embed: issues.QueryBoardParamEmbed{Issues: true, Workspace: true},
 				},
 			},
 			want: issues.BoardWithEmbedDatas{
@@ -323,7 +323,7 @@ func Test_boardService_FindBoards(t *testing.T) {
 			args: args{
 				r: r,
 				p: issues.QueryBoardParam{
-					Embed: []string{"issues", "workspace"},
+					Embed: issues.QueryBoardParamEmbed{Issues: true, Workspace: true},
 				},
 			},
 			want: []issues.BoardWithEmbedDatas{
@@ -545,7 +545,7 @@ func Test_boardService_FindIssue(t *testing.T) {
 				r:  r,
 				id: "1",
 				p: issues.QueryIssueParam{
-					Embed: []string{"column", "board", "workspace"},
+					Embed: issues.QueryIssueParamEmbed{Column: true, Board: true, Workspace: true},
 				},
 			},
 			want: issues.IssueWithEmbedDatas{
@@ -693,7 +693,7 @@ func Test_boardService_FindIssues(t *testing.T) {
 			args: args{
 				r: r,
 				p: issues.QueryIssueParam{
-					Embed: []string{"column", "board", "workspace"},
+					Embed: issues.QueryIssueParamEmbed{Column: true, Board: true, Workspace: true},
 				},
 			},
 			want: []issues.IssueWithEmbedDatas{
@@ -885,7 +885,7 @@ func Test_boardService_FindWorkspace(t *testing.T) {
 				r:  r,
 				id: "1",
 				p: issues.QueryWorkspaceParam{
-					Embed:           []string{"boards", "issues"},
+					Embed:           issues.QueryWorkspaceParamEmbed{Boards: true, Issues: true},
 					IncludeArchived: true,
 				},
 			},
@@ -1135,7 +1135,7 @@ func Test_boardService_FindWorkspaces(t *testing.T) {
 			args: args{
 				r: r,
 				p: issues.QueryWorkspaceParam{
-					Embed:           []string{"boards", "issues"},
+					Embed:           issues.QueryWorkspaceParamEmbed{Boards: true, Issues: true},
 					IncludeArchived: true,
 				},
 			},

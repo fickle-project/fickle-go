@@ -30,10 +30,16 @@ type (
 	}
 
 	QueryColumnParam struct {
-		Embed       []string
+		Embed       QueryColumnParamEmbed
 		BoardId     *IdBoard
 		WorkspaceId *IdWorkspace
 		Default     *bool
+	}
+
+	QueryColumnParamEmbed struct {
+		Issues    bool
+		Board     bool
+		Workspace bool
 	}
 
 	ColumnWithEmbedDatas struct {
