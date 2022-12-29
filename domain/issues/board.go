@@ -21,11 +21,16 @@ type (
 	}
 
 	QueryBoardParam struct {
-		Embed           []string
+		Embed           QueryBoardParamEmbed
 		Name            *string
 		NameContain     *string
 		WorkspaceId     *IdWorkspace
 		IncludeArchived bool
+	}
+
+	QueryBoardParamEmbed struct {
+		Issues    bool
+		Workspace bool
 	}
 
 	BoardWithEmbedDatas struct {

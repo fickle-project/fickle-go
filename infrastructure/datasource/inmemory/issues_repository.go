@@ -54,9 +54,6 @@ func (r *rIssues) CreateWorkspace(w issues.Workspace) (issues.Workspace, error) 
 
 // FindBoard implements issues.IRepository
 func (r *rIssues) FindBoard(id issues.IdBoard, q issues.QueryBoardParam) (issues.BoardWithEmbedDatas, error) {
-	embedIssues := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "issues" })) > 0
-	embedWorkspace := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "workspace" })) > 0
-
 	bb := filter(r.boards, func(b issues.Board) bool { return b.Id == id })
 
 	if len(bb) == 0 {
@@ -64,16 +61,16 @@ func (r *rIssues) FindBoard(id issues.IdBoard, q issues.QueryBoardParam) (issues
 	}
 
 	embed := issues.BoardWithEmbedDatas{Board: bb[0]}
-	if embedWorkspace {
+	if q.Embed.Workspace {
 		w, err := r.FindWorkspace(bb[0].WorkspaceId, issues.QueryWorkspaceParam{})
 		if err != nil {
 			return issues.BoardWithEmbedDatas{}, err
 		}
 		embed.Workspace = w.Workspace
 	}
-	if embedIssues {
+	if q.Embed.Issues {
 		c, err := r.FindColumns(issues.QueryColumnParam{
-			Embed:       []string{"issues"},
+			Embed:       issues.QueryColumnParamEmbed{Issues: true},
 			BoardId:     &embed.Board.Id,
 			WorkspaceId: &embed.Board.WorkspaceId,
 		})
@@ -88,9 +85,6 @@ func (r *rIssues) FindBoard(id issues.IdBoard, q issues.QueryBoardParam) (issues
 
 // FindBoards implements issues.IRepository
 func (r *rIssues) FindBoards(q issues.QueryBoardParam) ([]issues.BoardWithEmbedDatas, error) {
-	embedIssues := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "issues" })) > 0
-	embedWorkspace := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "workspace" })) > 0
-
 	bb := filter(r.boards, func(b issues.Board) bool {
 		selected := true
 		if q.Name != nil {
@@ -109,7 +103,7 @@ func (r *rIssues) FindBoards(q issues.QueryBoardParam) ([]issues.BoardWithEmbedD
 	embeds := []issues.BoardWithEmbedDatas{}
 	for _, b := range bb {
 		embed := issues.BoardWithEmbedDatas{Board: b}
-		if embedWorkspace {
+		if q.Embed.Workspace {
 			w, err := r.FindWorkspace(b.WorkspaceId, issues.QueryWorkspaceParam{})
 			if err != nil {
 				return nil, err
@@ -117,9 +111,9 @@ func (r *rIssues) FindBoards(q issues.QueryBoardParam) ([]issues.BoardWithEmbedD
 			embed.Workspace = w.Workspace
 		}
 
-		if embedIssues {
+		if q.Embed.Issues {
 			cc, err := r.FindColumns(issues.QueryColumnParam{
-				Embed:       []string{"issues"},
+				Embed:       issues.QueryColumnParamEmbed{Issues: true},
 				BoardId:     &embed.Board.Id,
 				WorkspaceId: &embed.Board.WorkspaceId,
 			})
@@ -136,10 +130,6 @@ func (r *rIssues) FindBoards(q issues.QueryBoardParam) ([]issues.BoardWithEmbedD
 
 // FindColumn implements issues.IRepository
 func (r *rIssues) FindColumn(id issues.IdColumn, q issues.QueryColumnParam) (issues.ColumnWithEmbedDatas, error) {
-	embedIssues := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "issues" })) > 0
-	embedBoard := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "board" })) > 0
-	embedWorkspace := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "workspace" })) > 0
-
 	cc := filter(r.columns, func(c issues.Column) bool { return c.Id == id })
 
 	if len(cc) == 0 {
@@ -147,22 +137,17 @@ func (r *rIssues) FindColumn(id issues.IdColumn, q issues.QueryColumnParam) (iss
 	}
 
 	embed := issues.ColumnWithEmbedDatas{Column: cc[0]}
-	if embedWorkspace {
+	if q.Embed.Workspace {
 		w, err := r.FindWorkspace(embed.Column.WorkspaceId, issues.QueryWorkspaceParam{})
 		if err != nil {
 			return issues.ColumnWithEmbedDatas{}, err
 		}
 		embed.Workspace = w.Workspace
 	}
-	if embedIssues {
+	if q.Embed.Issues {
 		tmpCId := &embed.Column.Id
 		ii, err := r.FindIssues(issues.QueryIssueParam{
-			Embed: func() []string {
-				if embedBoard {
-					return []string{"board"}
-				}
-				return []string{}
-			}(),
+			Embed:       issues.QueryIssueParamEmbed{Board: q.Embed.Board},
 			BoardId:     q.BoardId,
 			ColumnId:    &tmpCId,
 			WorkspaceId: &embed.Column.WorkspaceId,
@@ -178,10 +163,6 @@ func (r *rIssues) FindColumn(id issues.IdColumn, q issues.QueryColumnParam) (iss
 
 // FindColumns implements issues.IRepository
 func (r *rIssues) FindColumns(q issues.QueryColumnParam) ([]issues.ColumnWithEmbedDatas, error) {
-	embedIssues := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "issues" })) > 0
-	embedBoard := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "board" })) > 0
-	embedWorkspace := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "workspace" })) > 0
-
 	cc := filter(r.columns, func(c issues.Column) bool {
 		selected := true
 		if q.WorkspaceId != nil {
@@ -196,22 +177,17 @@ func (r *rIssues) FindColumns(q issues.QueryColumnParam) ([]issues.ColumnWithEmb
 	embeds := []issues.ColumnWithEmbedDatas{}
 	for _, c := range cc {
 		embed := issues.ColumnWithEmbedDatas{Column: c}
-		if embedWorkspace {
+		if q.Embed.Workspace {
 			w, err := r.FindWorkspace(embed.Column.WorkspaceId, issues.QueryWorkspaceParam{})
 			if err != nil {
 				return nil, err
 			}
 			embed.Workspace = w.Workspace
 		}
-		if embedIssues {
+		if q.Embed.Issues {
 			tmpCId := &embed.Column.Id
 			ii, err := r.FindIssues(issues.QueryIssueParam{
-				Embed: func() []string {
-					if embedBoard {
-						return []string{"board"}
-					}
-					return []string{}
-				}(),
+				Embed:       issues.QueryIssueParamEmbed{Board: q.Embed.Board},
 				BoardId:     q.BoardId,
 				ColumnId:    &tmpCId,
 				WorkspaceId: &embed.Column.WorkspaceId,
@@ -229,10 +205,6 @@ func (r *rIssues) FindColumns(q issues.QueryColumnParam) ([]issues.ColumnWithEmb
 
 // FindIssue implements issues.IRepository
 func (r *rIssues) FindIssue(id issues.IdIssue, q issues.QueryIssueParam) (issues.IssueWithEmbedDatas, error) {
-	embedColumn := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "column" })) > 0
-	embedBoard := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "board" })) > 0
-	embedWorkspace := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "workspace" })) > 0
-
 	ii := filter(r.issues, func(i issues.Issue) bool { return i.Id == id })
 
 	if len(ii) == 0 {
@@ -240,21 +212,21 @@ func (r *rIssues) FindIssue(id issues.IdIssue, q issues.QueryIssueParam) (issues
 	}
 
 	embed := issues.IssueWithEmbedDatas{Issue: ii[0]}
-	if embedColumn && embed.Issue.ColumnId != nil {
+	if q.Embed.Column && embed.Issue.ColumnId != nil {
 		c, err := r.FindColumn(*embed.Issue.ColumnId, issues.QueryColumnParam{})
 		if err != nil {
 			return issues.IssueWithEmbedDatas{}, err
 		}
 		embed.Column = c.Column
 	}
-	if embedBoard {
+	if q.Embed.Board {
 		b, err := r.FindBoard(embed.Issue.BoardId, issues.QueryBoardParam{})
 		if err != nil {
 			return issues.IssueWithEmbedDatas{}, err
 		}
 		embed.Board = b.Board
 	}
-	if embedWorkspace {
+	if q.Embed.Workspace {
 		w, err := r.FindWorkspace(embed.Issue.WorkspaceId, issues.QueryWorkspaceParam{})
 		if err != nil {
 			return issues.IssueWithEmbedDatas{}, err
@@ -267,10 +239,6 @@ func (r *rIssues) FindIssue(id issues.IdIssue, q issues.QueryIssueParam) (issues
 
 // FindIssues implements issues.IRepository
 func (r *rIssues) FindIssues(q issues.QueryIssueParam) ([]issues.IssueWithEmbedDatas, error) {
-	embedColumn := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "column" })) > 0
-	embedBoard := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "board" })) > 0
-	embedWorkspace := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "workspace" })) > 0
-
 	ii := filter(r.issues, func(i issues.Issue) bool {
 		selected := true
 		if q.Name != nil {
@@ -298,21 +266,21 @@ func (r *rIssues) FindIssues(q issues.QueryIssueParam) ([]issues.IssueWithEmbedD
 	embeds := []issues.IssueWithEmbedDatas{}
 	for _, i := range ii {
 		embed := issues.IssueWithEmbedDatas{Issue: i}
-		if embedColumn && embed.Issue.ColumnId != nil {
+		if q.Embed.Column && embed.Issue.ColumnId != nil {
 			c, err := r.FindColumn(*embed.Issue.ColumnId, issues.QueryColumnParam{})
 			if err != nil {
 				return nil, err
 			}
 			embed.Column = c.Column
 		}
-		if embedBoard {
+		if q.Embed.Board {
 			b, err := r.FindBoard(embed.Issue.BoardId, issues.QueryBoardParam{})
 			if err != nil {
 				return nil, err
 			}
 			embed.Board = b.Board
 		}
-		if embedWorkspace {
+		if q.Embed.Workspace {
 			w, err := r.FindWorkspace(embed.Issue.WorkspaceId, issues.QueryWorkspaceParam{})
 			if err != nil {
 				return nil, err
@@ -327,9 +295,6 @@ func (r *rIssues) FindIssues(q issues.QueryIssueParam) ([]issues.IssueWithEmbedD
 
 // FindWorkspace implements issues.IRepository
 func (r *rIssues) FindWorkspace(id issues.IdWorkspace, q issues.QueryWorkspaceParam) (issues.WorkspaceWithEmbedDatas, error) {
-	embedBoards := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "boards" })) > 0
-	embedIssues := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "issues" })) > 0
-
 	ww := filter(r.workspaces, func(w issues.Workspace) bool { return w.Id == id })
 
 	if len(ww) == 0 {
@@ -345,15 +310,9 @@ func (r *rIssues) FindWorkspace(id issues.IdWorkspace, q issues.QueryWorkspacePa
 	}
 
 	embed := issues.WorkspaceWithEmbedDatas{Workspace: ww[0]}
-	if embedBoards {
+	if q.Embed.Boards {
 		bb, err := r.FindBoards(issues.QueryBoardParam{
-			Embed: func() []string {
-				embed := []string{}
-				if embedIssues {
-					embed = append(embed, "issues")
-				}
-				return embed
-			}(),
+			Embed:           issues.QueryBoardParamEmbed{Issues: q.Embed.Issues},
 			WorkspaceId:     &embed.Workspace.Id,
 			IncludeArchived: q.IncludeArchived,
 		})
@@ -368,9 +327,6 @@ func (r *rIssues) FindWorkspace(id issues.IdWorkspace, q issues.QueryWorkspacePa
 
 // FindWorkspaces implements issues.IRepository
 func (r *rIssues) FindWorkspaces(q issues.QueryWorkspaceParam) ([]issues.WorkspaceWithEmbedDatas, error) {
-	embedBoards := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "boards" })) > 0
-	embedIssues := len(filter(q.Embed, func(s string) bool { return strings.ToLower(s) == "issues" })) > 0
-
 	ww := filter(r.workspaces, func(w issues.Workspace) bool {
 		selected := true
 		selected = selected && (!w.Archived || q.IncludeArchived)
@@ -392,15 +348,9 @@ func (r *rIssues) FindWorkspaces(q issues.QueryWorkspaceParam) ([]issues.Workspa
 	embeds := []issues.WorkspaceWithEmbedDatas{}
 	for _, w := range ww {
 		embed := issues.WorkspaceWithEmbedDatas{Workspace: w}
-		if embedBoards {
+		if q.Embed.Boards {
 			bb, err := r.FindBoards(issues.QueryBoardParam{
-				Embed: func() []string {
-					embed := []string{}
-					if embedIssues {
-						embed = append(embed, "issues")
-					}
-					return embed
-				}(),
+				Embed:           issues.QueryBoardParamEmbed{Issues: q.Embed.Issues},
 				WorkspaceId:     &embed.Workspace.Id,
 				IncludeArchived: q.IncludeArchived,
 			})

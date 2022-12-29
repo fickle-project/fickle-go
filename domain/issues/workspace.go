@@ -22,8 +22,13 @@ type (
 	}
 
 	QueryWorkspaceParam struct {
-		Embed           []string
+		Embed           QueryWorkspaceParamEmbed
 		IncludeArchived bool
+	}
+
+	QueryWorkspaceParamEmbed struct {
+		Boards bool
+		Issues bool
 	}
 
 	WorkspaceWithEmbedDatas struct {
