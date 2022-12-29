@@ -16,6 +16,13 @@ func TestBoard_Remove(t *testing.T) {
 		Archived:    false,
 		UserId:      "1",
 	})
+	r.CreateBoard(issues.Board{
+		Id:          "2",
+		Name:        "elkcif",
+		WorkspaceId: "1",
+		Archived:    false,
+		UserId:      "1",
+	})
 
 	type fields struct {
 		Id          issues.IdBoard
@@ -41,6 +48,20 @@ func TestBoard_Remove(t *testing.T) {
 				WorkspaceId: "1",
 				Archived:    false,
 				UserId:      "1"},
+			args: args{
+				r: r,
+			},
+			wantErr: false,
+		},
+		{
+			name: "ok",
+			fields: fields{
+				Id:          "2",
+				Name:        "elkcif",
+				WorkspaceId: "1",
+				Archived:    false,
+				UserId:      "1",
+			},
 			args: args{
 				r: r,
 			},

@@ -41,6 +41,15 @@ func TestIssue_Remove(t *testing.T) {
 		WorkspaceId: "1",
 		UserId:      "1",
 	})
+	r.CreateIssue(issues.Issue{
+		Id:          "2",
+		Name:        "issue 2",
+		BoardId:     "1",
+		ColumnId:    func() *issues.IdColumn { var id issues.IdColumn = "1"; return &id }(),
+		Order:       "1",
+		WorkspaceId: "1",
+		UserId:      "1",
+	})
 
 	type fields struct {
 		Id          issues.IdIssue
@@ -66,6 +75,22 @@ func TestIssue_Remove(t *testing.T) {
 			fields: fields{
 				Id:          "1",
 				Name:        "issue 1",
+				BoardId:     "1",
+				ColumnId:    func() *issues.IdColumn { var id issues.IdColumn = "1"; return &id }(),
+				Order:       "1",
+				WorkspaceId: "1",
+				UserId:      "1",
+			},
+			args: args{
+				r: r,
+			},
+			wantErr: false,
+		},
+		{
+			name: "ok",
+			fields: fields{
+				Id:          "2",
+				Name:        "issue 2",
 				BoardId:     "1",
 				ColumnId:    func() *issues.IdColumn { var id issues.IdColumn = "1"; return &id }(),
 				Order:       "1",

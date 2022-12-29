@@ -22,6 +22,15 @@ func TestColumn_Update(t *testing.T) {
 			Default:     true,
 			WorkspaceId: "1",
 			UserId:      "1",
+		}, {
+			Id:          "3",
+			Name:        "In Progress",
+			Color:       "#3498db",
+			Hidden:      false,
+			Order:       "111",
+			Default:     false,
+			WorkspaceId: "1",
+			UserId:      "1",
 		}},
 		Archived: false,
 		UserId:   "1",
@@ -163,6 +172,37 @@ func TestColumn_Update(t *testing.T) {
 			},
 			want:    issues.Column{},
 			wantErr: true,
+		},
+		{
+			name: "ok",
+			fields: fields{
+				Id:          "3",
+				Name:        "In Progress",
+				Color:       "#3498db",
+				Hidden:      false,
+				Order:       "111",
+				Default:     false,
+				WorkspaceId: "1",
+				UserId:      "1",
+			},
+			args: args{
+				r: r,
+				p: issues.UpdateBoardColumnParam{
+					Name:  func() *string { s := "Next up"; return &s }(),
+					Order: func() *string { s := "11"; return &s }(),
+				},
+			},
+			want: issues.Column{
+				Id:          "3",
+				Name:        "Next up",
+				Color:       "#3498db",
+				Hidden:      false,
+				Order:       "11",
+				Default:     false,
+				WorkspaceId: "1",
+				UserId:      "1",
+			},
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
