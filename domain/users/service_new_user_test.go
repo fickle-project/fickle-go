@@ -19,7 +19,7 @@ func Test_userService_NewUser(t *testing.T) {
 		want        users.User
 		wantErr     bool
 	}{{
-		name:        "success",
+		name:        "ok",
 		initialData: []users.CreateUserParam{},
 		args: args{
 			f: inmemory.NewFactoryUsers(),
